@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UniBoard.Data;
+using Microsoft.AspNetCore.Identity;
+using UniBoard.Models;
 namespace UniBoard
 {
     public class Program
@@ -12,6 +14,11 @@ namespace UniBoard
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddRazorPages();
 
             var app = builder.Build();
@@ -27,6 +34,7 @@ namespace UniBoard
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapRazorPages();
