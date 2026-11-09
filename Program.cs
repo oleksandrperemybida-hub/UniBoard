@@ -6,7 +6,7 @@ namespace UniBoard
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -18,10 +18,13 @@ namespace UniBoard
             {
                 options.SignIn.RequireConfirmedAccount = false;
             })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddRazorPages();
 
             var app = builder.Build();
+
+            await DbSeeder.SeedAsync(app.Services);
 
             if (!app.Environment.IsDevelopment())
             {
