@@ -15,7 +15,6 @@ public static class DbSeeder
         var config = sp.GetRequiredService<IConfiguration>();
         var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("DbSeeder");
 
-        // 1. Role: Administrator i User (tworzone tylko, jeśli ich jeszcze nie ma)
         foreach (var role in new[] { AppRoles.Administrator, AppRoles.User })
         {
             if (!await roleManager.RoleExistsAsync(role))
@@ -29,7 +28,6 @@ public static class DbSeeder
             }
         }
 
-        // 2. Konto administratora - dane z user-secrets, nie z repozytorium
         var email = config["Admin:Email"];
         var password = config["Admin:Password"];
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
