@@ -1,28 +1,43 @@
 @using Microsoft.AspNetCore.Identity
 @using UniBoard.Models
-
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
+<ul class="navbar-nav align-items-center">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-        </form>
+    var currentUser = await UserManager.GetUserAsync(User);
+    var initials = $"{currentUser?.FirstName?.FirstOrDefault()}{currentUser?.LastName?.FirstOrDefault()}".ToUpper();
+    if (string.IsNullOrEmpty(initials)) initials = "U";
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 p-0" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="badge bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.85rem;">
+                @initials
+            </span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
+            @if (User.IsInRole("Administrator"))
+            {
+                <li><a class="dropdown-item fw-bold text-danger" asp-area="" asp-page="/Admin/Index">Panel Administratora</a></li>
+                <li><hr class="dropdown-divider"></li>
+            }
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Ustawienia konta</a></li>
+            <li>
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })">
+                    <button type="submit" class="dropdown-item text-secondary">Wyloguj</button>
+                </form>
+            </li>
+        </ul>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link text-dark fw-semibold me-2" asp-area="Identity" asp-page="/Account/Login">Zaloguj się</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="btn btn-outline-primary rounded-3 fw-semibold" asp-area="Identity" asp-page="/Account/Register">Zarejestruj się</a>
     </li>
 }
 </ul>
