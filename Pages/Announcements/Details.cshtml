@@ -1,0 +1,71 @@
+@page "{id:int}"
+@model UniBoard.Pages.Announcements.DetailsModel
+@{
+    ViewData["Title"] = Model.Announcement.Title;
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                
+                <div class="mb-2">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold">
+                        @(Model.Announcement.Category?.Name ?? "Inne")
+                    </span>
+                </div>
+
+                <h2 class="fw-bold text-dark mb-3">@Model.Announcement.Title</h2>
+
+                <div class="mb-4">
+                    @if (Model.Announcement.Price.HasValue)
+                    {
+                        <span class="fs-3 fw-bold text-success">@Model.Announcement.Price.Value.ToString("N0") zł</span>
+                    }
+                    else
+                    {
+                        <span class="fs-4 text-muted fw-semibold">Za darmo / Oddam</span>
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold small">Opis</h6>
+                    <p class="text-secondary fs-6" style="white-space: pre-line;">@Model.Announcement.Description</p>
+                </div>
+
+                <hr class="my-4 text-muted opacity-25" />
+
+                <div class="bg-light rounded-3 p-3 mb-4">
+                    <div class="mb-2">
+                        <strong class="text-dark">Autor:</strong>
+                        <span class="text-secondary ms-1">
+                            @(Model.Announcement.Author?.FirstName ?? "Użytkownik") @(Model.Announcement.Author?.LastName?.Substring(0, 1)).
+                        </span>
+                        <span class="text-muted ms-2">· dodano @Model.Announcement.CreatedAt.ToString("dd.MM.yyyy")</span>
+                    </div>
+                    <div>
+                        <strong class="text-dark">Kontakt:</strong>
+                        <a href="mailto:@Model.Announcement.Author?.Email" class="text-primary text-decoration-none ms-1">
+                            @Model.Announcement.Author?.Email
+                        </a>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between pt-2">
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-warning text-dark fw-semibold rounded-3 btn-sm px-3">
+                            ★ Do ulubionych
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary fw-semibold rounded-3 btn-sm px-3">
+                            🏳 Zgłoś
+                        </button>
+                    </div>
+                    <a asp-page="/Index" class="btn btn-link text-secondary text-decoration-none ms-auto">
+                        &larr; Wróć do ogłoszeń
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
