@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using UniBoard.Models;
 
 namespace UniBoard.Data;
@@ -26,6 +27,21 @@ public static class DbSeeder
                         string.Join("; ", roleResult.Errors.Select(e => e.Description)));
                 }
             }
+        }
+
+        // Startowe kategorie ogłoszeń - potrzebne w formularzu dodawania ogłoszenia (Task 7).
+        // Zarządzanie kategoriami przez administratora będzie w Sprincie 2.
+        var db = sp.GetRequiredService<ApplicationDbContext>();
+        if (!await db.Categories.AnyAsync())
+        {
+            db.Categories.AddRange(
+                new Category { Name = "Książki i notatki" },
+                new Category { Name = "Elektronika" },
+                new Category { Name = "Mieszkania i pokoje" },
+                new Category { Name = "Korepetycje" },
+                new Category { Name = "Wydarzenia" },
+                new Category { Name = "Inne" });
+            await db.SaveChangesAsync();
         }
 
         var email = config["Admin:Email"];
