@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using UniBoard.Models;
+using UniBoard.Data;
 
 namespace UniBoard.Pages.Announcements
 {
