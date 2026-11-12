@@ -1,0 +1,19 @@
+ZMIANY W ISTNIEJACYCH PLIKACH REPOZYTORIUM (zrobic recznie)
+
+1) UniBoard.csproj  -  dopisz ten blok przed zamykajacym </Project>
+   (BEZ tego glowny projekt probuje kompilowac pliki testow i build sie wywali):
+
+  <ItemGroup>
+    <Compile Remove="UniBoard.Tests\**" />
+    <Content Remove="UniBoard.Tests\**" />
+    <EmbeddedResource Remove="UniBoard.Tests\**" />
+    <None Remove="UniBoard.Tests\**" />
+  </ItemGroup>
+
+2) UniBoard.sln  -  w terminalu, w katalogu z UniBoard.sln:
+
+  dotnet sln UniBoard.sln add UniBoard.Tests/UniBoard.Tests.csproj
+
+3) Nowe pliki (skopiuj z paczki, nic nie nadpisujesz):
+   UniBoard.Tests/                    (caly folder)
+   .github/workflows/tests.yml        (opcjonalnie - automatyczne testy na GitHubie)
