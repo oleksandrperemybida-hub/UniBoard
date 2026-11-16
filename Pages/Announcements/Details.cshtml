@@ -10,6 +10,15 @@
     // Task 11: przycisk "Edytuj" widzi tylko autor ogłoszenia
     var isAuthor = User.Identity?.IsAuthenticated == true
                    && UserManager.GetUserId(User) == Model.Announcement.AuthorId;
+
+    // BUG-01: konta z rejestracji mają puste imię i nazwisko - Substring(0, 1) na pustym nazwisku dawał błąd 500
+    var firstName = Model.Announcement.Author?.FirstName;
+    var lastName = Model.Announcement.Author?.LastName;
+    var authorName = string.IsNullOrWhiteSpace(firstName) ? "Użytkownik" : firstName;
+    if (!string.IsNullOrWhiteSpace(lastName))
+    {
+        authorName += " " + lastName.Trim()[..1] + ".";
+    }
 }
 
 <div class="container py-4">
@@ -54,7 +63,7 @@
                     <div class="mb-2">
                         <strong class="text-dark">Autor:</strong>
                         <span class="text-secondary ms-1">
-                            @(Model.Announcement.Author?.FirstName ?? "Użytkownik") @(Model.Announcement.Author?.LastName?.Substring(0, 1)).
+                            @authorName
                         </span>
                         <span class="text-muted ms-2">· dodano @Model.Announcement.CreatedAt.ToString("dd.MM.yyyy")</span>
                     </div>
