@@ -1,0 +1,64 @@
+@page "{id:int}"
+@model UniBoard.Pages.Announcements.EditModel
+@{
+    ViewData["Title"] = "Edytuj ogłoszenie";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <h2 class="fw-bold text-dark mb-1">Edytuj ogłoszenie</h2>
+                <p class="text-muted mb-4">Dodano @Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm"). Autor i data dodania nie zmieniają się przy edycji.</p>
+
+                <form method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Title" class="form-label fw-semibold"></label>
+                        <input asp-for="Input.Title" class="form-control" />
+                        <span asp-validation-for="Input.Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.CategoryId" class="form-label fw-semibold"></label>
+                        <select asp-for="Input.CategoryId" asp-items="Model.Categories" class="form-select">
+                            <option value="0">-- wybierz kategorię --</option>
+                        </select>
+                        <span asp-validation-for="Input.CategoryId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Input.Description" class="form-control" rows="6"></textarea>
+                        <span asp-validation-for="Input.Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-5 mb-3">
+                            <label asp-for="Input.Price" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.Price" type="number" min="0" max="100000" step="1" class="form-control"
+                                   value="@(Model.Input.Price?.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture))"
+                                   placeholder="puste = za darmo" />
+                            <span asp-validation-for="Input.Price" class="text-danger small"></span>
+                        </div>
+                        <div class="col-sm-7 mb-3">
+                            <label asp-for="Input.Contact" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.Contact" type="email" class="form-control" />
+                            <span asp-validation-for="Input.Contact" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2">
+                        <a asp-page="./Details" asp-route-id="@Model.Id" class="btn btn-link text-secondary text-decoration-none">Anuluj</a>
+                        <button type="submit" class="btn btn-primary fw-semibold px-4">Zapisz zmiany</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
