@@ -1,12 +1,27 @@
 @page "{id:int}"
 @model UniBoard.Pages.Announcements.DetailsModel
+@using Microsoft.AspNetCore.Identity
+@using UniBoard.Models
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = Model.Announcement.Title;
+}
+@{
+    // Task 11: przycisk "Edytuj" widzi tylko autor ogłoszenia
+    var isAuthor = User.Identity?.IsAuthenticated == true
+                   && UserManager.GetUserId(User) == Model.Announcement.AuthorId;
 }
 
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-9 col-lg-8">
+            @if (TempData["Message"] is string message)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @message
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij"></button>
+                </div>
+            }
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 
                 <div class="mb-2">
@@ -53,6 +68,12 @@
 
                 <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between pt-2">
                     <div class="d-flex gap-2">
+                        @if (isAuthor)
+                        {
+                            <a asp-page="./Edit" asp-route-id="@Model.Announcement.Id" class="btn btn-outline-primary fw-semibold rounded-3 btn-sm px-3">
+                                ✎ Edytuj
+                            </a>
+                        }
                         <button type="button" class="btn btn-outline-warning text-dark fw-semibold rounded-3 btn-sm px-3">
                             ★ Do ulubionych
                         </button>
