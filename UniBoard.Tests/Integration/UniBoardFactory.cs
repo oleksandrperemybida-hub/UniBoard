@@ -28,6 +28,11 @@ public class UniBoardFactory : WebApplicationFactory<UniBoard.Program>
         _connection = new SqliteConnection("DataSource=:memory:");
         _connection.Open();
         TestDb.EnableForeignKeys(_connection);
+
+        // Tabele muszą istnieć, zanim Program.cs uruchomi DbSeeder
+        using var db = new ApplicationDbContext(
+            new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(_connection).Options);
+        db.Database.EnsureCreated();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -48,7 +53,14 @@ public class UniBoardFactory : WebApplicationFactory<UniBoard.Program>
     {
         var host = base.CreateHost(builder);
         using var scope = host.Services.CreateScope();
-        scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.EnsureCreated();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.EnsureCreated();
+
+        // DbSeeder przy starcie dodaje kategorie startowe (np. "Elektronika").
+        // Testy zakładają czystą bazę i same dodają swoje kategorie,
+        // więc usuwamy te z seedera, żeby nie łamać unikalnej nazwy kategorii.
+        db.Categories.RemoveRange(db.Categories);
+        db.SaveChanges();
         return host;
     }
 

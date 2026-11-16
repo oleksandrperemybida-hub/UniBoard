@@ -147,7 +147,6 @@ public class AnnouncementDetailsPageTests : IClassFixture<UniBoardFactory>
     // Konta z rejestracji mają puste FirstName/LastName (formularz rejestracji ich nie zbiera),
     // a widok robi LastName?.Substring(0, 1) - dla "" rzuca ArgumentOutOfRangeException => błąd 500.
     [Fact]
-    [Trait("Category", "KnownBug")]
     public async Task BUG01_Details_AuthorWithEmptyLastName_ShouldNotCrash()
     {
         var id = await SeedAnnouncementAsync(firstName: "", lastName: "", authorEmail: "nowy@test.pl");
