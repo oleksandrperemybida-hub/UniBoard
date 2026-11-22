@@ -26,7 +26,7 @@ namespace UniBoard
             // Настройка пути при отказе в доступе (403)
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.AccessDeniedPath = "/Error?statusCode=403";
+                options.AccessDeniedPath = "/Error";
             });
 
             builder.Services.AddRazorPages();

@@ -24,9 +24,10 @@ namespace UniBoard.Pages
         public void OnGet(int? statusCode = null)
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-            ErrorStatusCode = statusCode ?? Response.StatusCode;
 
-            // Если перешли через AccessDeniedPath, гарантируем корректный HTTP-статус 403
+            // Если statusCode не передан (значит сработал AccessDeniedPath из Identity), ставим 403
+            ErrorStatusCode = statusCode ?? (Response.StatusCode == 200 ? 403 : Response.StatusCode);
+
             if (ErrorStatusCode == 403)
             {
                 Response.StatusCode = 403;
