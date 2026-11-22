@@ -94,7 +94,7 @@ public class AccessControlTests : IClassFixture<UniBoardFactory>
         var response = await _factory.CreateClientFor("jakis-user", "User").GetAsync("/Admin");
 
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-        Assert.Contains("AccessDenied", response.Headers.Location!.ToString());
+        Assert.Contains("/Error", response.Headers.Location!.ToString());
     }
 
     [Fact]
