@@ -1,26 +1,32 @@
 ﻿@page
 @model ErrorModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = Model.ErrorStatusCode switch
+    {
+        403 => "Brak dostępu (403)",
+        404 => "Nie znaleziono strony (404)",
+        _ => "Wystąpił błąd"
+    };
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="container text-center mt-5">
+    @if (Model.ErrorStatusCode == 403)
+    {
+        <h1 class="display-1 fw-bold text-danger">403</h1>
+        <h2 class="mb-3">Brak dostępu</h2>
+        <p class="lead text-muted mb-4">Nie masz uprawnień do wyświetlenia tej strony lub wykonania tej operacji.</p>
+    }
+    else if (Model.ErrorStatusCode == 404)
+    {
+        <h1 class="display-1 fw-bold text-warning">404</h1>
+        <h2 class="mb-3">Nie znaleziono strony</h2>
+        <p class="lead text-muted mb-4">Strona lub ogłoszenie, którego szukasz, nie istnieje lub zostało usunięte.</p>
+    }
+    else
+    {
+        <h1 class="display-4 text-danger">Wystąpił błąd</h1>
+        <p class="lead text-muted mb-4">Przepraszamy, coś poszło nie tak podczas przetwarzania żądania.</p>
+    }
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to the <strong>Development</strong> environment displays detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    <a asp-page="/Index" class="btn btn-primary">Wróć na stronę główną</a>
+</div>
