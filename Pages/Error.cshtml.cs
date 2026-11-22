@@ -12,6 +12,8 @@ namespace UniBoard.Pages
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
+        public int? ErrorStatusCode { get; set; }
+
         private readonly ILogger<ErrorModel> _logger;
 
         public ErrorModel(ILogger<ErrorModel> logger)
@@ -19,10 +21,16 @@ namespace UniBoard.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public void OnGet(int? statusCode = null)
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            ErrorStatusCode = statusCode ?? Response.StatusCode;
+
+            // Если перешли через AccessDeniedPath, гарантируем корректный HTTP-статус 403
+            if (ErrorStatusCode == 403)
+            {
+                Response.StatusCode = 403;
+            }
         }
     }
-
 }
